@@ -7,37 +7,43 @@ SET parent=%~dp0
 ::Put sejda-console in PATH for current session
 set PATH=%PATH%;%parent%\sejda-console-2.10.4\bin
 
-::Delete temp dir if it exists
-IF EXIST "temp" ECHO exists(
-	RMDIR temp /s /q
-)
-IF EXIST "temp2" ECHO exists(
-	RMDIR temp2 /s /q
-)
-
 ::create temp dir
 mkdir temp
-mkdir temp2
+mkdir temp\cover
+mkdir temp\report
+mkdir temp\toMerge
+
+::Copy cover file to temp
+COPY .\CoverPages\* .\temp\cover
+
+::Prefix cover file with 0
+cd temp\cover
+forfiles /M *.pdf /C "cmd /c ren @file 0@file"
+cd ..\..
 
 ::Split file
-CALL sejda-console simplesplit -f .\Front_pages\0front.pdf -o .\temp -s all
+CALL sejda-console simplesplit -f .\temp\cover\* -o .\temp\toMerge -s all
 
 ::Add 0 to single digit prefix og split front pages
-cd temp
-forfiles /M ?_0front.pdf /C "cmd /c ren @file 0@file"
-cd ..
+cd temp\toMerge
+forfiles /M ?_0* /C "cmd /c ren @file 0@file"
+cd ..\..
 
 ::Merge subfolders into output folder
-FOR /D %%i in (.\Appendices\*) do (CALL sejda-console merge -d %%i -o .\temp\%%~ni.pdf -b discard)
+FOR /D %%i in (.\Appendices\*) do (CALL sejda-console merge -d %%i -o .\temp\toMerge\%%~ni.pdf -b discard)
 
-::Copy Report to temp2
-COPY .\Report\* .\temp2 
+::Copy Report to temp
+COPY .\Report\* .\temp\report 
 
 ::Prefix Report
-FORFILES /p .\temp2 /C "cmd /c ren @file 00@file"
+FORFILES /p .\temp\report /C "cmd /c ren @file 00@file"
 
 ::Move Report to temp
-MOVE .\temp2\* .\temp
+COPY .\temp\report\* .\temp\toMerge
 
 ::Merge files in outputfolder
-CALL sejda-console merge -d .\temp -o .\final.pdf --overwrite
+CALL sejda-console merge -d .\temp\toMerge -o .\final.pdf --overwrite
+
+:Delete temp dir
+IF EXIST "temp" ECHO exists(
+	RMDIR temp /s /q
