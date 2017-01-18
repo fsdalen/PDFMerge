@@ -1,5 +1,11 @@
-@setlocal enableextensions enabledelayedexpansion
 @echo off
+@setlocal enableextensions enabledelayedexpansion
+
+::Path of current dir
+SET parent=%~dp0
+
+::Put sejda-console in PATH for current session
+set PATH=%PATH%;%parent%\sejda-console-2.10.4\bin
 
 ::Delete temp dir if it exists
 IF EXIST "temp" ECHO exists(
