@@ -7,6 +7,7 @@ Batch script that splits and merges PDFs to add attatchements with cover pages t
 * No spaces in folder names
 * Report and Cover Pages needs to be split manually
 * Only handles individual cover pages (multi-page covers do not work)
+* Must be ran on local disk (C:)
 
 ##Instructions
 * Put appendicies in folder "Appendices" sorted with numbers (01,02...12,13... etc)
