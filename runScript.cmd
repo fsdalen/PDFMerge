@@ -13,6 +13,16 @@ mkdir temp\cover
 mkdir temp\report
 mkdir temp\toMerge
 
+:::::::::::::::::::::::::::::::::::::::::::::::::
+::Atemt to split report and cover in the script to avoid having to do it manually first.
+::Splitting is working. Moving the two split files correctly is missing
+::Split Cover and report.
+set /p pNum="Split after page: "	::User input
+CALL sejda-console splitbypages --files .\Report\* --output .\temp --pageNumbers %pNum%
+
+:::::::::::::::::::::::::::::::::::::::::::::::::
+
+
 ::Copy cover file to temp
 COPY .\CoverPages\* .\temp\cover
 
